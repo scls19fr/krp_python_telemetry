@@ -4,4 +4,6 @@ Telemetry for Kart Racing Pro using Python notebook (Jupyter)
 
 
 See also:
-- http://www.lautrup.se/KaRTA/
+- KaRTA
+  - http://www.lautrup.se/KaRTA/
+  - https://github.com/flautrup/KaRTA
