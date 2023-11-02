@@ -1,10 +1,14 @@
 # krp_python_telemetry
 
-Telemetry for [Kart Racing Pro](https://www.kartracing-pro.com/) using Python notebook (Jupyter)
+Telemetry for [Kart Racing Pro](https://www.kartracing-pro.com/) using Python notebook ([Jupyter](https://jupyter.org/))
 
 ## Installation
 
 Install a scientific distribution of Python such as [Anaconda Python](https://www.anaconda.com/download) 
+Dependencies:
+- [Pandas](https://pandas.pydata.org/)
+- [Plotly](https://plotly.com/)
+
 Run notebook using
 
     $ jupyter notebook
