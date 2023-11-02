@@ -6,10 +6,10 @@ Telemetry for [Kart Racing Pro](https://www.kartracing-pro.com/) using Python no
 
 Plot various data such as Engine (rpm), Distance,	CylHeadTemp	(°C), WaterTemp (°C), Gear, Speed	(km/h), LatAcc (G), LonAcc (G), Steer (°), Throttle (%), Brake (%), FrontBrakes (%), Clutch (%), YawVel (deg/s)
 
-- engine (rpm) vs laptime
+- Engine (rpm) vs Laptime
 ![Engine_vs_Laptime](screenshots/Engine_vs_Laptime.PNG)
 
-- engine (rpm) vs Distance
+- Engine (rpm) vs Distance
 
 ![Engine_vs_Distance](screenshots/Engine_vs_Distance.PNG)
 
