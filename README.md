@@ -5,7 +5,9 @@ Telemetry for [Kart Racing Pro](https://www.kartracing-pro.com/) using Python no
 ## Installation
 
 Install a scientific distribution of Python such as [Anaconda Python](https://www.anaconda.com/download) 
+
 Dependencies:
+- [Numpy](https://numpy.org/)
 - [Pandas](https://pandas.pydata.org/)
 - [Plotly](https://plotly.com/)
 
