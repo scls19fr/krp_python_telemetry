@@ -31,7 +31,7 @@ scenario_cfg = Config.configure_scenario("scenario", task_configs=[build_telemet
 fname = "Logdata Essay mini60 2023-10-31.csv"
 df_head, df_units, df, laptimes = load_krp_file(fname)
 laps = get_laps(df)
-print(laps)
+selected_laps = pd.Series(True, index=laps)
 df_disp = df.copy()
 df_disp.index = (df_disp.index - pd.to_datetime(0)).total_seconds()
 
@@ -64,6 +64,24 @@ page_data = """
 <|{df_disp.reset_index()}|table|>
 """
 
+
+def lap_button_pressed(state, id):
+    # React to the button press action
+    print(state, id)
+
+
+def build_laps_buttons(selected_laps):
+    buttons = ""
+    for i, (lap, selected) in enumerate(selected_laps.items()):
+        if i != 0:
+            buttons += " "
+        if selected:
+            class_name = "plain"
+        else:
+            class_name = ""
+        buttons += f"<|{lap}|button|on_action=lap_button_pressed|id={lap}|class_name={class_name}|>"
+    return buttons
+
 page_analyse = """
 <|layout|columns=40% 30% 30%|
 
@@ -74,9 +92,12 @@ page_analyse = """
 <|{df_units.reset_index()}|table|page_size=5|>
 
 |>
+"""
 
-Laps: <|0|button|> <|1|button|> <|2|button|> <|3|button|> <|4|button|> <|5|button|> <|6|button|> <|7|button|>
+buttons = build_laps_buttons(selected_laps)
+page_analyse += f"Laps: {buttons}"
 
+page_analyse += """
 <|layout|columns=70% 30%|
 <|{df}|chart|mode=line|x=Distance|y=Engine|color=Lap|>
 <|{df}|chart|mode=line|x=Distance|y=CylHeadTemp|color=Lap|>
