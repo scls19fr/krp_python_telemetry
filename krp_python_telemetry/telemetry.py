@@ -162,5 +162,5 @@ if __name__ == "__main__":
     # Manage scenarios and data nodes
     scenario = tp.create_scenario(scenario_cfg)
     # Instantiate and run Gui service
-    Gui(pages=pages).run()
-
+    gui = Gui(pages=pages)
+    gui.run(dark_mode=False)
