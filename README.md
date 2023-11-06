@@ -17,7 +17,7 @@ Compare trajectory among differents laps
 
 ![Engine_vs_Distance](screenshots/Trajectory.PNG)
 
-Plot Engine (RPM) histogram
+Plot Engine (rpm) histogram
 
 ![Engine_hist](screenshots/Engine_hist.PNG)
 
