@@ -17,6 +17,10 @@ Compare trajectory among differents laps
 
 ![Engine_vs_Distance](screenshots/Trajectory.PNG)
 
+Draw Engine (RPM) histogram
+
+![Engine_hist](screenshots/Engine_hist.PNG)
+
 
 ## Installation
 
