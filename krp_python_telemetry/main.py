@@ -17,7 +17,7 @@ def load_telemetry_file(state):
     state.df_disp["Time"] = (
         state.df_disp["Time"] - pd.to_datetime(0)
     ).dt.total_seconds()
-    state.laps = get_laps(df)
+    state.laps = list(get_laps(state.df))
 
 
 fname = ""
@@ -66,19 +66,24 @@ head = """
 <|navbar|>
 """
 
+# ToFix format: <|{laptimes}|table|rebuild|columns={"Laptime": {"format": "%.3f"}}|page_size=5|>
+
+laptime_cols = {"Laptime": {"format": "%.3f"}}
+data_cols = {"Time": {"format": "%.3f"}, "Laptime": {"format": "%.3f"}}
+
 page_data = """
 <|layout|columns=40% 30% 30%|
 
 <|{df_head}|table|rebuild|page_size=5|>
 
-<|{laptimes}|table|rebuild|page_size=5|>
+<|{laptimes}|table|rebuild|columns={laptime_cols}|page_size=5|>
 
 <|{df_units}|table|rebuild|page_size=5|>
 
 |>
 
 
-<|{df_disp}|table|rebuild|>
+<|{df_disp}|table|rebuild|columns={data_cols}|>
 """
 
 
@@ -87,7 +92,7 @@ page_analyse = """
 
 <|{df_head}|table|rebuild|page_size=5|>
 
-<|{laptimes}|table|rebuild|page_size=5|>
+<|{laptimes}|table|rebuild|columns={laptime_cols}|page_size=5|>
 
 <|{df_units}|table|rebuild|page_size=5|>
 
@@ -118,7 +123,7 @@ page_analyse = """
 page_laps = """
 <|layout|columns=60% 40%|
 
-<|{laptimes}|table|rebuild|page_size=20|>
+<|{laptimes}|table|rebuild|columns={laptime_cols}|page_size=20|>
 
 <|{df_head}|table|rebuild|page_size=20|>
 
@@ -131,7 +136,7 @@ page_rpm_hist = """
 
 <|{df_head}|table|rebuild|page_size=5|>
 
-<|{laptimes}|table|rebuild|page_size=5|>
+<|{laptimes}|table|rebuild|columns={laptime_cols}|page_size=5|>
 
 <|{df_units}|table|rebuild|page_size=5|>
 
