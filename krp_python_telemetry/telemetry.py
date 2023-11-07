@@ -1,50 +1,40 @@
-import taipy as tp
-from taipy import Config, Core, Gui
+from taipy import Gui
+import numpy as np
 import pandas as pd
 from utils import load_krp_file, get_laps
 
 
-################################################################
-#            Configure application                             #
-################################################################
-def load_telemetry_file(name):
-    print("xxx")
-    return f"Hello {name}!"
-
-
-# A first data node configuration to model an input name.
-fname_data_node_cfg = Config.configure_data_node(id="fname")
-# A second data node configuration to model the message to display.
-df_head_data_node_cfg = Config.configure_data_node(id="df_head")
-# A task configuration to model the build_message function.
-build_telemetry_task_cfg = Config.configure_task("load_telemetry_file", load_telemetry_file, fname_data_node_cfg, df_head_data_node_cfg)
-# The scenario configuration represents the whole execution graph.
-scenario_cfg = Config.configure_scenario("scenario", task_configs=[build_telemetry_task_cfg])
-
-################################################################
-#            Design graphical interface                        #
-################################################################
-
-#fname = None
-#df_head = None
-
-fname = "Logdata Essay mini60 2023-10-31.csv"
-df_head, df_units, df, laptimes = load_krp_file(fname)
-laps = get_laps(df)
-selected_laps = pd.Series(True, index=laps)
-df_disp = df.copy()
-df_disp.index = (df_disp.index - pd.to_datetime(0)).total_seconds()
-
-def load_telemetry_file_scenario(state):
+def load_telemetry_file(state):
     fname = state.fname
-    df_head, df_units, df, laptimes = load_krp_file(fname)
-    state.scenario.df_head.write(df_head)
-    state.scenario.submit()
-    state.df_head = scenario.df_head.read()
+    state.df_head, state.df_units, state.df, state.laptimes = load_krp_file(fname)
+    state.df_head = state.df_head.reset_index()
+    state.df_units = state.df_units.reset_index()
+    state.df = state.df.reset_index()
+    state.laptimes = state.laptimes.reset_index()
+    state.df_disp = state.df.copy()
+    #state.df_disp.index = (state.df_disp.index - pd.to_datetime(0)).total_seconds()
+    state.df_disp["Time"] = (state.df_disp["Time"] - pd.to_datetime(0)).total_seconds()
+    state.laps = get_laps(df)
+    state.selected_laps = pd.Series(True, index=laps)
+
+
+fname = ""
+df_head, df_units, df, laptimes = None, None, None, None
+laps = [0]
+selected_laps = pd.Series(True, index=laps)
+df_disp = None
+
+#fname = "Logdata Essay mini60 2023-10-31.csv"
+#df_head, df_units, df, laptimes = load_krp_file(fname)
+#laps = get_laps(df)
+#selected_laps = pd.Series(True, index=laps)
+#df_disp = df.copy()
+#df_disp.index = (df_disp.index - pd.to_datetime(0)).total_seconds()
+
 
 
 head = """
-<|{fname}|file_selector|label=Open Kart Racing Pro Telemetry File|on_action=load_telemetry_file_scenario|extensions=.csv|drop_message=Drop Message|>
+<|{fname}|file_selector|label=Open Kart Racing Pro Telemetry File|on_action=load_telemetry_file|extensions=.csv|drop_message=Drop Message|>
 
 <|navbar|>
 """
@@ -52,16 +42,16 @@ head = """
 page_data = """
 <|layout|columns=40% 30% 30%|
 
-<|{df_head.reset_index()}|table|page_size=5|>
+<|{df_head}|table|rebuild|page_size=5|>
 
-<|{laptimes.reset_index()}|table|page_size=5|>
+<|{laptimes}|table|rebuild|page_size=5|>
 
-<|{df_units.reset_index()}|table|page_size=5|>
+<|{df_units}|table|rebuild|page_size=5|>
 
 |>
 
 
-<|{df_disp.reset_index()}|table|>
+<|{df_disp}|table|rebuild|>
 """
 
 
@@ -71,7 +61,7 @@ def lap_button_pressed(state, id):
 
 
 def build_laps_buttons(selected_laps):
-    buttons = ""
+    buttons = "Laps: "
     for i, (lap, selected) in enumerate(selected_laps.items()):
         if i != 0:
             buttons += " "
@@ -85,17 +75,17 @@ def build_laps_buttons(selected_laps):
 page_analyse = """
 <|layout|columns=40% 30% 30%|
 
-<|{df_head.reset_index()}|table|page_size=5|>
+<|{df_head}|table|rebuild|page_size=5|>
 
-<|{laptimes.reset_index()}|table|page_size=5|>
+<|{laptimes}|table|rebuild|page_size=5|>
 
-<|{df_units.reset_index()}|table|page_size=5|>
+<|{df_units}|table|rebuild|page_size=5|>
 
 |>
 """
 
 buttons = build_laps_buttons(selected_laps)
-page_analyse += f"Laps: {buttons}"
+page_analyse += f"{buttons}"
 
 page_analyse += """
 <|layout|columns=70% 30%|
@@ -121,11 +111,26 @@ page_analyse += """
 page_laps = """
 <|layout|columns=60% 40%|
 
-<|{laptimes.reset_index()}|table|page_size=20|>
+<|{laptimes}|table|rebuild|page_size=20|>
 
-<|{df_head.reset_index()}|table|page_size=20|>
+<|{df_head}|table|rebuild|page_size=20|>
 
 |>
+
+"""
+
+page_rpm_hist = """
+<|layout|columns=40% 30% 30%|
+
+<|{df_head}|table|rebuild|page_size=5|>
+
+<|{laptimes}|table|rebuild|page_size=5|>
+
+<|{df_units}|table|rebuild|page_size=5|>
+
+|>
+
+
 
 """
 
@@ -154,13 +159,9 @@ pages = {
     "data": page_data,
     "analyse": page_analyse,
     "laps": page_laps,
+    #"rpm hist": page_rpm_hist,
 }
 
 if __name__ == "__main__":
-    # Instantiate and run Core service
-    Core().run()
-    # Manage scenarios and data nodes
-    scenario = tp.create_scenario(scenario_cfg)
-    # Instantiate and run Gui service
     gui = Gui(pages=pages)
     gui.run(dark_mode=False)

@@ -17,7 +17,8 @@ def load_krp_file(fname):
     df["Lap"] = ((df["Distance"] - df["Distance"].shift()) < 0).astype(int).cumsum()
     #df["Laptime"] = pd.NaT
     df["Starttime"] = np.where((df["Distance"] - df["Distance"].shift()) < 0, df["Time"], np.NaN)
-    df["Starttime"].iloc[0] = 0
+    #df["Starttime"].iloc[0] = 0
+    df.loc[df.index[0], "Starttime"] = 0
     #df["Starttime"] = df["Starttime"].fillna(method="ffill")
     df["Starttime"] = df["Starttime"].ffill()
     df["Laptime"] = df["Time"] - df["Starttime"]
