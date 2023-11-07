@@ -39,9 +39,14 @@ Dependencies:
 - same as previously mentioned +
 - [Taipy](https://www.taipy.io/)
 
-Run application using:
+Run application locally using:
 
     $ poetry run taipy run krp_python_telemetry/telemetry.py
+
+Deployed on [Taipy Cloud](https://www.taipy.io/cloud/)
+
+    Browse to https://krp-telemetry.taipy.cloud/
+
 
 ## See also
 - KaRTA
