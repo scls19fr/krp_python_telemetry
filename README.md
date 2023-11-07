@@ -45,7 +45,7 @@ Run application locally using:
 
 Deployed on [Taipy Cloud](https://www.taipy.io/cloud/)
 
-    Browse to https://krp-telemetry.taipy.cloud/
+Browse to https://krp-telemetry.taipy.cloud/
 
 
 ## See also
