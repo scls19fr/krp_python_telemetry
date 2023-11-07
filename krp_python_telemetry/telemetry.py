@@ -11,26 +11,53 @@ def load_telemetry_file(state):
     state.df_units = state.df_units.reset_index()
     state.df = state.df.reset_index()
     state.laptimes = state.laptimes.reset_index()
+
     state.df_disp = state.df.copy()
-    #state.df_disp.index = (state.df_disp.index - pd.to_datetime(0)).total_seconds()
-    state.df_disp["Time"] = (state.df_disp["Time"] - pd.to_datetime(0)).total_seconds()
+    # state.df_disp.index = (state.df_disp.index - pd.to_datetime(0)).total_seconds()
+    state.df_disp["Time"] = (
+        state.df_disp["Time"] - pd.to_datetime(0)
+    ).dt.total_seconds()
     state.laps = get_laps(df)
-    state.lap_sel.lov = state.laps
 
 
 fname = ""
-df_head, df_units, df, laptimes = None, None, None, None
+df_head = pd.DataFrame(columns=["key", "value"])
+df_units = pd.DataFrame(columns=["index", "units"])
+df = pd.DataFrame(
+    columns=[
+        "Time",
+        "Distance",
+        "Engine",
+        "CylHeadTemp",
+        "WaterTemp",
+        "Gear",
+        "Speed",
+        "LatAcc",
+        "LonAcc",
+        "Steer",
+        "Throttle",
+        "Brake",
+        "FrontBrakes",
+        "Clutch",
+        "YawVel",
+        "PosX",
+        "PosY",
+        "Lap",
+        "Starttime",
+        "Laptime",
+    ]
+)
+laptimes = pd.DataFrame(columns=["Lap", "Laptime"])
 laps = []
-selected_laps = pd.Series(True, index=laps)
+lap_sel = []
 df_disp = None
 
-#fname = "Logdata Essay mini60 2023-10-31.csv"
-#df_head, df_units, df, laptimes = load_krp_file(fname)
-#laps = get_laps(df)
-#selected_laps = pd.Series(True, index=laps)
-#df_disp = df.copy()
-#df_disp.index = (df_disp.index - pd.to_datetime(0)).total_seconds()
-
+# fname = "Logdata Essay mini60 2023-10-31.csv"
+# df_head, df_units, df, laptimes = load_krp_file(fname)
+# laps = get_laps(df)
+# selected_laps = pd.Series(True, index=laps)
+# df_disp = df.copy()
+# df_disp.index = (df_disp.index - pd.to_datetime(0)).total_seconds()
 
 
 head = """
@@ -141,7 +168,7 @@ pages = {
     "data": page_data,
     "analyse": page_analyse,
     "laps": page_laps,
-    #"rpm hist": page_rpm_hist,
+    # "rpm hist": page_rpm_hist,
 }
 
 if __name__ == "__main__":
