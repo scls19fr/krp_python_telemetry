@@ -5,11 +5,12 @@ import plotly.express as px
 
 def load_krp_file(fname):
     nrows = 12
-    df_head = pd.read_csv(fname, nrows=nrows, names=["key", "value"])
-    df_head = df_head.set_index("key")
+    df_head = pd.read_csv(fname, nrows=nrows, names=["Key", "Value"])
+    df_head = df_head.set_index("Key")
     df = pd.read_csv(fname, skiprows=nrows)
     units = df.iloc[0, :]
-    units.name = "units"
+    units.index.name = "Data"
+    units.name = "Units"
     cols = df.columns
     df = df.drop(0)
     for col in df.columns:

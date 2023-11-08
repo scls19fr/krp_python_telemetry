@@ -6,24 +6,41 @@ from utils import load_krp_file, get_laps
 
 def load_telemetry_file(state):
     fname = state.fname
-    state.df_head, state.df_units, state.df, state.laptimes = load_krp_file(fname)
+    state.df_head, state.df_units, state.df_all, state.laptimes = load_krp_file(fname)
     state.df_head = state.df_head.reset_index()
     state.df_units = state.df_units.reset_index()
-    state.df = state.df.reset_index()
+    state.df_all = state.df_all.reset_index()
     state.laptimes = state.laptimes.reset_index()
 
-    state.df_disp = state.df.copy()
+    state.laps = list(get_laps(state.df_all))
+    state.laps = [str(lap) for lap in state.laps]
+
+    selected_laps = []
+    state.df = filtering_laps(state.df_all, selected_laps)
+
+    state.df_disp = state.df_all.copy()
+
     # state.df_disp.index = (state.df_disp.index - pd.to_datetime(0)).total_seconds()
+
     state.df_disp["Time"] = (
         state.df_disp["Time"] - pd.to_datetime(0)
     ).dt.total_seconds()
-    state.laps = list(get_laps(state.df))
+
+
+def filtering_laps(df: pd.DataFrame, selected_laps):
+    df_filtered = df[df["Lap"].map(lambda lap: lap in selected_laps)]
+    return df_filtered
+
+
+def filter_by_laps(state):
+    selected_laps = [int(lap) for lap in state.lap_sel]
+    state.df = filtering_laps(state.df_all, selected_laps)
 
 
 fname = ""
-df_head = pd.DataFrame(columns=["key", "value"])
-df_units = pd.DataFrame(columns=["index", "units"])
-df = pd.DataFrame(
+df_head = pd.DataFrame(columns=["Key", "Value"])
+df_units = pd.DataFrame(columns=["Data", "Units"])
+df_all = pd.DataFrame(
     columns=[
         "Time",
         "Distance",
@@ -50,14 +67,8 @@ df = pd.DataFrame(
 laptimes = pd.DataFrame(columns=["Lap", "Laptime"])
 laps = []
 lap_sel = []
-df_disp = None
-
-# fname = "Logdata Essay mini60 2023-10-31.csv"
-# df_head, df_units, df, laptimes = load_krp_file(fname)
-# laps = get_laps(df)
-# selected_laps = pd.Series(True, index=laps)
-# df_disp = df.copy()
-# df_disp.index = (df_disp.index - pd.to_datetime(0)).total_seconds()
+df = df_all.copy()
+df_disp = df_all.copy()
 
 
 head = """
@@ -66,10 +77,13 @@ head = """
 <|navbar|>
 """
 
-# ToFix format: <|{laptimes}|table|rebuild|columns={"Laptime": {"format": "%.3f"}}|page_size=5|>
+laptime_cols = {"Lap": {}, "Laptime": {"format": "%.3f"}}
 
-laptime_cols = {"Laptime": {"format": "%.3f"}}
-data_cols = {"Time": {"format": "%.3f"}, "Laptime": {"format": "%.3f"}}
+data_cols = {}
+for col in df.columns:
+    data_cols[col] = {}
+for col in ["Time", "Laptime"]:
+    data_cols[col] = {"format": "%.3f"}
 
 page_data = """
 <|layout|columns=40% 30% 30%|
@@ -88,7 +102,9 @@ page_data = """
 
 
 page_analyse = """
-<|layout|columns=40% 30% 30%|
+<|layout|columns=15% 30% 25% 25%|
+
+<|{lap_sel}|selector|multiple|lov={laps}|height=300px|on_change=filter_by_laps|>
 
 <|{df_head}|table|rebuild|page_size=5|>
 
@@ -98,22 +114,20 @@ page_analyse = """
 
 |>
 
-<|{lap_sel}|selector|multiple|lov={laps}|>
-
 <|layout|columns=70% 30%|
-<|{df}|chart|mode=line|x=Distance|y=Engine|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=CylHeadTemp|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=WaterTemp|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=Gear|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=Speed|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=LatAcc|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=LonAcc|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=Steer|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=Throttle|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=Brake|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=FrontBrakes|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=Clutch|color=Lap|>
-<|{df}|chart|mode=line|x=Distance|y=YawVel|color=Lap|>
+<|{df}|chart|mode=line|x=Distance|y=Engine|>
+<|{df}|chart|mode=line|x=Distance|y=CylHeadTemp|>
+<|{df}|chart|mode=line|x=Distance|y=WaterTemp|>
+<|{df}|chart|mode=line|x=Distance|y=Gear|>
+<|{df}|chart|mode=line|x=Distance|y=Speed|>
+<|{df}|chart|mode=line|x=Distance|y=LatAcc|>
+<|{df}|chart|mode=line|x=Distance|y=LonAcc|>
+<|{df}|chart|mode=line|x=Distance|y=Steer|>
+<|{df}|chart|mode=line|x=Distance|y=Throttle|>
+<|{df}|chart|mode=line|x=Distance|y=Brake|>
+<|{df}|chart|mode=line|x=Distance|y=FrontBrakes|>
+<|{df}|chart|mode=line|x=Distance|y=Clutch|>
+<|{df}|chart|mode=line|x=Distance|y=YawVel|>
 
 <|{df}|chart|mode=scatter|x=PosX|y=PosY|>
 
@@ -178,4 +192,4 @@ pages = {
 
 if __name__ == "__main__":
     gui = Gui(pages=pages)
-    gui.run(dark_mode=False)
+    gui.run(title="KRP Telemetry", dark_mode=False)
