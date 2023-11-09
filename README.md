@@ -15,11 +15,19 @@ Plot various data such as Engine (rpm), Distance,	CylHeadTemp	(°C), WaterTemp (
 
 Compare trajectory among differents laps
 
-![Engine_vs_Distance](screenshots/Trajectory.PNG)
+![Trajectory](screenshots/Trajectory.PNG)
 
 Plot Engine (rpm) histogram
 
 ![Engine_hist](screenshots/Engine_hist.PNG)
+
+Display Brake use on trajectory
+
+![Trajectory_Brake](screenshots/Trajectory_Brake.PNG)
+
+Display Speed on trajectory
+
+![Trajectory_Speed](screenshots/Trajectory_Speed.PNG)
 
 
 ## Installation
