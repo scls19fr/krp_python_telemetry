@@ -100,6 +100,13 @@ page_data = """
 <|{df_disp}|table|rebuild|columns={data_cols}|>
 """
 
+#mapchart_opt_dict = {
+#    "type": "scatter",
+#    "x": "PosX",
+#    "y": "PosY"
+#}
+#<|{df}|chart|options={mapchart_opt_dict}|>
+# ToDo: color = colormap (Brake)
 
 page_analyse = """
 <|layout|columns=15% 30% 25% 25%|
