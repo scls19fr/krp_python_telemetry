@@ -50,6 +50,13 @@ $ px.scatter(df[df["Lap"] == 4], x="PosX", y="PosY", color="Speed", hover_name="
 
 ![Trajectory_Speed](screenshots/Trajectory_Speed.PNG)
 
+Display friction circle
+
+```python
+px.scatter(df[(df["Lap"] == 4)], x="LatAcc", y="LonAcc", color="Speed", hover_name="Laptime", color_continuous_scale="YlOrBr")
+```
+
+![Friction_circle](screenshots/Friction_circle.PNG)
 
 ## Installation
 
