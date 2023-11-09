@@ -23,9 +23,13 @@ Plot Engine (rpm) histogram
 
 Display Brake use on trajectory
 
+    $ px.scatter(df[df["Lap"] == 4], x="PosX", y="PosY", color="Brake", hover_name="Laptime", color_continuous_scale="YlOrBr")
+
 ![Trajectory_Brake](screenshots/Trajectory_Brake.PNG)
 
 Display Speed on trajectory
+
+    $ px.scatter(df[df["Lap"] == 4], x="PosX", y="PosY", color="Speed", hover_name="Laptime", color_continuous_scale="YlOrBr")
 
 ![Trajectory_Speed](screenshots/Trajectory_Speed.PNG)
 
