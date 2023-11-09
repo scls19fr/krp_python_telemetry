@@ -24,6 +24,10 @@ $ plot_lap_data(df, "Engine", index="Distance")
 
 Compare trajectory among differents laps
 
+```python
+$ plot_trajectory(df)
+```
+
 ![Trajectory](screenshots/Trajectory.PNG)
 
 Plot Engine (rpm) histogram
