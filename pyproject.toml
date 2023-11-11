@@ -1,17 +1,18 @@
 [tool.poetry]
-name = "krp-python-telemetry"
+name = "krp-dash-telemetry"
 version = "0.1.0"
 description = ""
 authors = ["scls19fr <s.celles@gmail.com>"]
 readme = "README.md"
-packages = [{include = "krp_python_telemetry"}]
+packages = [{include = "krp_dash_telemetry"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 numpy = "^1.26.1"
 pandas = "^2.1.2"
 plotly = "^5.18.0"
-taipy = "^3.0.0"
+dash = "^2.14.1"
+dash-bootstrap-components = "^1.5.0"
 
 
 [build-system]
