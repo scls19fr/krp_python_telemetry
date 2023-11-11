@@ -50,6 +50,14 @@ $ px.scatter(df[df["Lap"] == 4], x="PosX", y="PosY", color="Speed", hover_name="
 
 ![Trajectory_Speed](screenshots/Trajectory_Speed.PNG)
 
+Display Steer angle on trajectory
+
+```python
+$ px.scatter(df[df["Lap"] == 4], x="PosX", y="PosY", color="Steer", hover_name="Distance", color_continuous_scale="RdBu")
+```
+
+![Trajectory_Speed](screenshots/Trajectory_Steer.PNG)
+
 Display friction circle
 
 ```python
