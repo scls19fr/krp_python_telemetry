@@ -315,7 +315,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         ]
     )
 
-    @callback(
+    @app.callback(
         Output("datatable-head", "data"),
         Input("datatable-head", "page_current"),
         Input("datatable-head", "page_size"),
@@ -325,7 +325,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
-    @callback(
+    @app.callback(
         Output("datatable-laptimes", "data"),
         Input("datatable-laptimes", "page_current"),
         Input("datatable-laptimes", "page_size"),
@@ -335,7 +335,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
-    @callback(
+    @app.callback(
         Output("datatable-units", "data"),
         Input("datatable-units", "page_current"),
         Input("datatable-units", "page_size"),
@@ -345,7 +345,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
-    @callback(
+    @app.callback(
         Output("datatable-data", "data"),
         Input("datatable-data", "page_current"),
         Input("datatable-data", "page_size"),
