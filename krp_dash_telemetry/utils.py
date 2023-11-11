@@ -48,9 +48,14 @@ def get_laps(df):
     return df["Lap"].unique()
 
 
+def get_best_lap(laptimes):
+    return laptimes.sort_values(by="Laptime")["Lap"].iloc[0]
+
+
 def get_lap_data(df, lap, index="Laptime"):
     df_lap = df[df["Lap"] == lap]
-    df_lap = df_lap.set_index(index)
+    if index is not None:
+        df_lap = df_lap.set_index(index)
     return df_lap
 
 
