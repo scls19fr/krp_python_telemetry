@@ -85,4 +85,5 @@ Run notebook using
   - https://github.com/flautrup/KaRTA
 - Work in progress
   -  [Taipy](https://www.taipy.io/) [Kart Racing Pro telemetry app](https://github.com/scls19fr/krp_python_telemetry/tree/taipy)
+    -  Deployed app available at https://krp-telemetry.taipy.cloud/ (beta version)
   -  [Dash](https://dash.plotly.com/) [Kart Racing Pro telemetry app](https://github.com/scls19fr/krp_python_telemetry/tree/dash)
