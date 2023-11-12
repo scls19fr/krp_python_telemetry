@@ -3,12 +3,13 @@ import pandas as pd
 import plotly.express as px
 
 
-def load_krp_file(fname):
+def load_krp_file(io):
     nrows = 12
-    df_head = pd.read_csv(fname, nrows=nrows, names=["Key", "Value"])
+    df_head = pd.read_csv(io, nrows=nrows, names=["Key", "Value"])
     # df_head = df_head.set_index("Key")
 
-    df = pd.read_csv(fname, skiprows=nrows)
+    io.seek(0)
+    df = pd.read_csv(io, skiprows=nrows)
     units = df.iloc[0, :]
     units.index.name = "Data"
     units.name = "Units"

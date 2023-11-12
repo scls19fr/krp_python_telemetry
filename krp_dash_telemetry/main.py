@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import base64
+import io
 import click
 from utils import load_krp_file, get_lap_data, get_laps, get_best_lap
 import plotly.express as px
@@ -35,12 +37,10 @@ def main(host, port, theme):
     PAGE_SIZE_HEADER = 5
     PAGE_SIZE_DATA = 100
 
-    df_head, df_units, df, df_laptimes = load_krp_file(
-        "Logdata Essay mini60 2023-10-31.csv"
-    )
+    #df_head, df_units, df, df_laptimes = load_krp_file(
+    #    "Logdata Essay mini60 2023-10-31.csv"
+    #)
 
-    laps = get_laps(df)
-    selected_lap = get_best_lap(df_laptimes)
 
     """
     @callback(Output('output-data-upload', 'children'),
@@ -92,7 +92,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                                 dash_table.DataTable(
                                     id="datatable-head",
                                     columns=[
-                                        {"name": i, "id": i} for i in df_head.columns
+                                        {"name": i, "id": i} for i in app.df_head.columns
                                     ],
                                     page_current=0,
                                     page_size=PAGE_SIZE_HEADER,
@@ -105,7 +105,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                                     id="datatable-laptimes",
                                     columns=[
                                         {"name": i, "id": i}
-                                        for i in df_laptimes.columns
+                                        for i in app.df_laptimes.columns
                                     ],
                                     page_current=0,
                                     page_size=PAGE_SIZE_HEADER,
@@ -117,7 +117,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                                 dash_table.DataTable(
                                     id="datatable-units",
                                     columns=[
-                                        {"name": i, "id": i} for i in df_units.columns
+                                        {"name": i, "id": i} for i in app.df_units.columns
                                     ],
                                     page_current=0,
                                     page_size=PAGE_SIZE_HEADER,
@@ -130,7 +130,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                     html.Br(),
                     dash_table.DataTable(
                         id="datatable-data",
-                        columns=[{"name": i, "id": i} for i in df.columns],
+                        columns=[{"name": i, "id": i} for i in app.df.columns],
                         page_current=0,
                         page_size=PAGE_SIZE_DATA,
                         page_action="custom",
@@ -141,7 +141,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         elif tab == "tab-analyse":
             graphs = []
             index = "Distance"
-            for col in df.columns:
+            for col in app.df.columns:
                 if col not in [
                     "Time",
                     "Distance",
@@ -151,10 +151,10 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                     "Lap",
                     "Starttime",
                 ]:
-                    df_lap = get_lap_data(df, 0, index=index)
+                    df_lap = get_lap_data(app.df, 0, index=index)
                     fig = px.line(df_lap, x=df_lap.index, y=col, color="Lap")
-                    for lap in laps[1:]:
-                        df_lap = get_lap_data(df, lap, index)
+                    for lap in app.laps[1:]:
+                        df_lap = get_lap_data(app.df, lap, index)
                         fig.add_scatter(
                             x=df_lap.index, y=df_lap[col], mode="lines", name=str(lap)
                         )
@@ -169,7 +169,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
             #    id="dropdown-lap-selection",
             # )
             # maps.append(dd_lap)
-            for col in df.columns:
+            for col in app.df.columns:
                 if col not in [
                     "Time",
                     "Distance",
@@ -183,7 +183,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                         color_scale = "RdBu"
                     else:
                         color_scale = "YlOrBr"
-                    df_selected_lap = get_lap_data(df, selected_lap, index=None)
+                    df_selected_lap = get_lap_data(app.df, app.selected_lap, index=None)
                     fig = px.scatter(
                         df_selected_lap,
                         x="PosX",
@@ -212,10 +212,10 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
 
         elif tab == "tab-laps":
             index = "Distance"
-            df_lap = get_lap_data(df, 0, index)
+            df_lap = get_lap_data(app.df, 0, index)
             fig = px.line(df_lap, x="PosX", y="PosY", color="Lap")
-            for lap in laps[1:]:
-                df_lap = get_lap_data(df, lap, index)
+            for lap in app.laps[1:]:
+                df_lap = get_lap_data(app.df, lap, index)
                 fig.add_scatter(
                     x=df_lap["PosX"], y=df_lap["PosY"], mode="lines", name=str(lap)
                 )
@@ -231,7 +231,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                                     id="datatable-laptimes-all",
                                     columns=[
                                         {"name": i, "id": i}
-                                        for i in df_laptimes.columns
+                                        for i in app.df_laptimes.columns
                                     ],
                                     page_current=0,
                                     page_size=PAGE_SIZE_DATA,
@@ -251,7 +251,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         Input("datatable-laptimes-all", "page_size"),
     )
     def update_table_laptimes_all(page_current, page_size):
-        return df_laptimes.iloc[
+        return app.df_laptimes.iloc[
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
@@ -301,6 +301,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
                 },
                 multiple=False,  # Don't allow multiple files to be uploaded
             ),
+            html.Div(id='output-data-upload'),
             dcc.Tabs(
                 id="tabs-example-1",
                 value="tab-about",
@@ -315,13 +316,51 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         ]
     )
 
+
+    def parse_contents(contents, filename, date):
+        content_type, content_string = contents.split(',')
+
+        decoded = base64.b64decode(content_string)
+        dat = io.StringIO(decoded.decode('utf-8'))
+
+        app.df_head, app.df_units, app.df, app.df_laptimes = load_krp_file(dat)
+        app.laps = get_laps(app.df)
+        app.selected_lap = get_best_lap(app.df_laptimes)
+
+        return html.Div([
+            html.H5(filename),
+
+            # dash_table.DataTable(
+            #     df.to_dict('records'),
+            #     [{'name': i, 'id': i} for i in df.columns]
+            # ),
+
+            html.Hr(),  # horizontal line
+
+            # For debugging, display the raw contents provided by the web browser
+            html.Div('Raw Content'),
+            html.Pre(contents[0:200] + '...', style={
+                'whiteSpace': 'pre-wrap',
+                'wordBreak': 'break-all'
+            })
+        ])
+
+    @app.callback(Output('output-data-upload', 'children'),
+                Input('upload-data', 'contents'),
+                State('upload-data', 'filename'),
+                State('upload-data', 'last_modified'))
+    def update_output(content, name, date):
+        if content is not None:
+            children = [parse_contents(content, name, date)]
+            return children
+
     @app.callback(
         Output("datatable-head", "data"),
         Input("datatable-head", "page_current"),
         Input("datatable-head", "page_size"),
     )
     def update_table_head(page_current, page_size):
-        return df_head.iloc[
+        return app.df_head.iloc[
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
@@ -331,7 +370,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         Input("datatable-laptimes", "page_size"),
     )
     def update_table_laptimes(page_current, page_size):
-        return df_laptimes.iloc[
+        return app.df_laptimes.iloc[
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
@@ -341,7 +380,7 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         Input("datatable-units", "page_size"),
     )
     def update_table_units(page_current, page_size):
-        return df_units.iloc[
+        return app.df_units.iloc[
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
@@ -351,12 +390,12 @@ Feel free to watch code at [https://github.com/scls19fr/krp_python_telemetry](ht
         Input("datatable-data", "page_size"),
     )
     def update_table_data(page_current, page_size):
-        return df.iloc[
+        return app.df.iloc[
             page_current * page_size : (page_current + 1) * page_size
         ].to_dict("records")
 
     # Run the app
-    app.run(host=host, port=port, debug=True)
+    app.run(host=host, port=port, debug=False)
 
 
 if __name__ == "__main__":
