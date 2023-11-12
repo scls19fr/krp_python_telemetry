@@ -37,19 +37,13 @@ Run notebook using
 
 Dependencies:
 - same as previously mentioned +
-- [Taipy](https://www.taipy.io/)
+- [Dash](https://dash.plotly.com/)
 
 Run application locally using:
 
-    $ poetry run taipy run krp_python_telemetry/telemetry.py
-
-Deployed on [Taipy Cloud](https://www.taipy.io/cloud/)
-
-Browse to https://krp-telemetry.taipy.cloud/
-
+    $ poetry run taipy run krp_dash_telemetry/main.py
 
 ## See also
 - KaRTA
   - http://www.lautrup.se/KaRTA/
   - https://github.com/flautrup/KaRTA
-
