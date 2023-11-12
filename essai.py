@@ -1,15 +1,16 @@
 from dash import Dash, dcc, html, dash_table, Input, Output, State, callback
 
+import base64
+import datetime
+import io
 
 import numpy as np
 import pandas as pd
-import plotly.express as px
 
 
 def load_krp_file(io):
     nrows = 12
     df_head = pd.read_csv(io, nrows=nrows, names=["Key", "Value"])
-
     # df_head = df_head.set_index("Key")
 
     io.seek(0)
@@ -21,8 +22,6 @@ def load_krp_file(io):
     df = df.drop(0)
     for col in df.columns:
         df[col] = df[col].astype(float)
-    
-    print(df)
     df["Lap"] = ((df["Distance"] - df["Distance"].shift()) < 0).astype(int).cumsum()
     # df["Laptime"] = pd.NaT
     df["Starttime"] = np.where(
@@ -47,14 +46,8 @@ def load_krp_file(io):
         df_head,
         units.to_frame().reset_index(),
         df,
-        laptimes.to_frame().reset_index()
+        laptimes.to_frame().reset_index(),
     )
-
-import base64
-import datetime
-import io
-
-import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -89,18 +82,18 @@ def parse_contents(contents, filename, date):
     print(content_type, filename, date)
 
     decoded = base64.b64decode(content_string)
-    # Assume that the user uploaded a CSV file
-    fileio = io.StringIO(decoded.decode('utf-8'))
-    df_head, df_units, df, df_laptimes = load_krp_file(fileio)
-    print(df_head)
-    print(df_units)
-    print(df)
-    print(df_laptimes)
-    #except Exception as e:
-    #    print(e)
-    #    return html.Div([
-    #        'There was an error processing this file.'
-    #    ])
+    dat = io.StringIO(decoded.decode('utf-8'))
+
+    try:
+        if '.csv' in filename:
+            # Assume that the user uploaded a CSV file
+            df_head, df_units, df, df_laptimes = load_krp_file(dat)
+
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'There was an error processing this file.'
+        ])
 
     return html.Div([
         html.H5(filename),
