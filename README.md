@@ -84,8 +84,11 @@ Run notebook using
   - http://www.lautrup.se/KaRTA/
   - https://github.com/flautrup/KaRTA
 - Work in progress
-  - [Taipy](https://www.taipy.io/) [Kart Racing Pro telemetry app](https://github.com/scls19fr/krp_python_telemetry/tree/taipy) ie this repository but in `taipy` branch
+  - [Taipy](https://www.taipy.io/) Kart Racing Pro telemetry app
+    - Source code https://github.com/scls19fr/krp_python_telemetry/tree/taipy (ie this repository but in `taipy` branch)
     - Deployed app available at https://krp-telemetry.taipy.cloud/ (beta version)
-  - [Dash](https://dash.plotly.com/) [Kart Racing Pro telemetry app](https://github.com/scls19fr/krp_python_telemetry/tree/dash)  ie this repository but in `dash` branch
-  - HTML/CSS/JS app [Kart Racing Pro telemetry app](https://scls19fr.github.io/krp_telemetry/)
+  - [Dash](https://dash.plotly.com/) Kart Racing Pro telemetry app
+    - https://github.com/scls19fr/krp_python_telemetry/tree/dash (ie this repository but in `dash` branch)
+  - HTML/CSS/JS app Kart Racing Pro telemetry app]
+    - Source code https://github.com/scls19fr/krp_python_telemetry/
     - Deployed app available at https://scls19fr.github.io/krp_telemetry/ (release candidate version) 
