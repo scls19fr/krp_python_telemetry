@@ -89,6 +89,6 @@ Run notebook using
     - Deployed app available at https://krp-telemetry.taipy.cloud/ (beta version)
   - [Dash](https://dash.plotly.com/) Kart Racing Pro telemetry app
     - https://github.com/scls19fr/krp_python_telemetry/tree/dash (ie this repository but in `dash` branch)
-  - HTML/CSS/JS app Kart Racing Pro telemetry app]
+- HTML/CSS/JS app Kart Racing Pro telemetry app
     - Source code https://github.com/scls19fr/krp_python_telemetry/
-    - Deployed app available at https://scls19fr.github.io/krp_telemetry/ (release candidate version) 
+    - Deployed app available at https://scls19fr.github.io/krp_telemetry/
