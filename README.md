@@ -90,5 +90,5 @@ Run notebook using
   - [Dash](https://dash.plotly.com/) Kart Racing Pro telemetry app
     - https://github.com/scls19fr/krp_python_telemetry/tree/dash (ie this repository but in `dash` branch)
 - HTML/CSS/JS app Kart Racing Pro telemetry app
-    - Source code https://github.com/scls19fr/krp_python_telemetry/
     - Deployed app available at https://scls19fr.github.io/krp_telemetry/
+    - Source code https://github.com/scls19fr/krp_telemetry/
